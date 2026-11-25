@@ -62,3 +62,39 @@ class ScreenRecorder:
         self.start_time = time.time()
         threading.Thread(target=self.record_screen).start()
         threading.Thread(target=self.record_audio).start()
+        
+    def record_screen(self):
+        while self.recording:
+            img = pyautogui.screenshot
+            frame = np.array(img)
+            frame = cv2.cvtColor(frame, cv2.COLOR_RGB2BGR)
+            self.video_writer.write(frame)
+            
+            # record time stream
+            
+            elapsed_time = time.time() - self.start_time
+            self.status_label.configure(text=f"Status: Recording...{int(elapsed_time)}s")
+            
+            def record_audio(self):
+                while self.recording:
+                    data = self.audio_stream.read(1024)
+                    self.audio_frames.append(data)
+                    
+                    
+            def stop_recording(self):
+                self.recording = False
+                self.start_button.configure(state = ctk.NORMAL)
+                self.stop_button.configure(state= ctk.DISABLED)
+                self.status_label.configure(text="status: idle")
+                
+                
+                #stop video recording
+                
+                self.video_writter.release()
+                
+                #stop audio recording
+                
+                self.audio_stream.stop_stream()
+                self.audio_stream.close()
+                self.audio.terminate()
+        

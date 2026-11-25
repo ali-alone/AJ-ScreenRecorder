@@ -5,6 +5,7 @@ import pyaudio
 import wave
 import threading
 import time
+import cv2
 from moviepy import *
 from tkinter import messagebox
 
@@ -44,3 +45,20 @@ class ScreenRecorder:
         self.stop_button.configure(state = ctk.NORMAL)
         self.status_label.configure(text = "Status: Recording...")
         
+        # record video settings
+        
+        screen_size = pyautogui.size()
+        fourcc = cv2.VideoWritter_fourcc(*"mp4v")
+        self.video_writer = cv2.VideoWritter("output_video.mp4", fourcc ,20.0,screen_size)
+        
+        #mic settings
+        
+        self.audio_frames = []
+        self.audio = pyaudio.PyAudio()
+        self.audio_stream = self.audio.open(format=pyaudio.paInt16,channels=1,rate=44100,input=True,frames_per_buffer=1024)
+        
+        # thread recording
+        
+        self.start_time = time.time()
+        threading.Thread(target=self.record_screen).start()
+        threading.Thread(target=self.record_audio).start()

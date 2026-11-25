@@ -97,4 +97,22 @@ class ScreenRecorder:
                 self.audio_stream.stop_stream()
                 self.audio_stream.close()
                 self.audio.terminate()
+                
+                
+                #mic sound save 
+                
+                with wave.open("output_audio.wav","wb") as wf:
+                    wf.setnchannels(1)
+                    wf.setsampwidth(self.audio.get_sample_size(pyaudio.paInt16))
+                    wf.setframerate(44100)
+                    wf.setframerate(b"".join(self.audio_frames))
         
+        
+                # sound and video mix
+                self.combine_audio_video("output_video.mp4" ,"output_audio.wav","output_final.mp4")
+                messagebox.showinfo("info", "video saved as output_final")
+                
+            def combine_audio_video(self,video_path,audio_path,output_path):
+                # save path
+                video_clip = VideoFileClip(video_path)
+                audio_clip = AudioFileClip(audio_path)
